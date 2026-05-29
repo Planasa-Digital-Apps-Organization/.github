@@ -39,8 +39,27 @@ jobs:
         run: |
           set -euo pipefail
 
+          echo "::group::Diagnostics"
+          echo "gh version:"
+          gh --version
+          echo
+          echo "Authenticated identity (gh api user):"
+          gh api user --jq '{login, type}' || echo "  gh api user failed"
+          echo
+          echo "Org membership / access (gh api orgs/$ORG):"
+          gh api "orgs/$ORG" --jq '{login, type, public_repos, total_private_repos, plan: (.plan.name // "n/a")}' || echo "  gh api orgs/$ORG failed (PAT may not see the org)"
+          echo
+          echo "Raw repo list (gh repo list, full fields):"
+          gh repo list "$ORG" --limit 200 --no-archived --json nameWithOwner,name,visibility,isArchived || echo "  gh repo list failed"
+          echo "::endgroup::"
+
           mapfile -t repos < <(gh repo list "$ORG" --limit 200 --no-archived --json name -q '.[].name')
           echo "Targeting ${#repos[@]} repo(s): ${repos[*]}"
+
+          if [ ${#repos[@]} -eq 0 ] || [ -z "${repos[0]:-}" ]; then
+            echo "::error::No repos visible to PAT. Likely cause: PAT's Resource owner is the user, not the org. Recreate the PAT with Resource owner = $ORG."
+            exit 1
+          fi
 
           count=$(yq '. | length' .github/labels.yml)
           for i in $(seq 0 $((count - 1))); do
