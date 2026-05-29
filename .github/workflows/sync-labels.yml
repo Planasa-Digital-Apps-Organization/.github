@@ -1,0 +1,63 @@
+name: Sync labels to org repos
+
+# Reads .github/labels.yml and propagates each label to every
+# non-archived repo in the Planasa-Digital-Apps-Organization. Additive:
+# never deletes labels that don't appear in labels.yml, so per-repo
+# custom labels survive.
+#
+# Triggers:
+#   - push to main when labels.yml or this workflow change
+#   - scheduled weekly (Mondays 06:00 UTC) — catches drift
+#   - manual workflow_dispatch — for after adding a new label
+#
+# Required org secret: LABEL_SYNC_TOKEN (fine-grained PAT with
+# metadata:read + issues:write on all org repos).
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/labels.yml'
+      - '.github/workflows/sync-labels.yml'
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Sync labels across org
+        env:
+          GH_TOKEN: ${{ secrets.LABEL_SYNC_TOKEN }}
+          ORG: Planasa-Digital-Apps-Organization
+        run: |
+          set -euo pipefail
+
+          mapfile -t repos < <(gh repo list "$ORG" --limit 200 --no-archived --json name -q '.[].name')
+          echo "Targeting ${#repos[@]} repo(s): ${repos[*]}"
+
+          count=$(yq '. | length' .github/labels.yml)
+          for i in $(seq 0 $((count - 1))); do
+            name=$(yq ".[$i].name" .github/labels.yml)
+            color=$(yq ".[$i].color" .github/labels.yml)
+            description=$(yq ".[$i].description // \"\"" .github/labels.yml)
+
+            echo "::group::Label '$name' (color=$color)"
+            for repo in "${repos[@]}"; do
+              existing=$(gh label list --repo "$ORG/$repo" --json name -q '.[].name' || echo "")
+              if echo "$existing" | grep -Fxq "$name"; then
+                gh label edit "$name" --color "$color" --description "$description" --repo "$ORG/$repo" >/dev/null
+                echo "  $repo: updated"
+              else
+                gh label create "$name" --color "$color" --description "$description" --repo "$ORG/$repo" >/dev/null
+                echo "  $repo: created"
+              fi
+            done
+            echo "::endgroup::"
+          done

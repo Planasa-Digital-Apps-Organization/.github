@@ -1,0 +1,77 @@
+name: Sensitive paths check (reusable)
+
+# Reusable workflow invoked from each Planasa repo's own
+# sensitive-paths-check.yml caller. On a PR that touches paths that
+# shape AI assistant behavior or PR safeguards:
+#   (a) applies the `area:ai-behavior` label (survives merge, queryable
+#       later via `is:pr label:area:ai-behavior`)
+#   (b) adds / refreshes a single bot comment with the author checklist
+#
+# Informative only — the actual merge gate is CODEOWNERS plus branch
+# protection / rulesets configured per-repo.
+#
+# The `paths:` filter that decides *when* this workflow runs lives in
+# the caller (because reusable workflows can't dynamically configure
+# their own trigger). Keep the caller's path list in sync with the
+# checklist below.
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  flag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Label PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              labels: ['area:ai-behavior']
+            });
+
+      - name: Comment on PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const marker = '<!-- sensitive-paths-bot -->';
+            const body = `${marker}\n⚠️ **This PR touches sensitive paths.**\n\n` +
+                         `Paths under \`.claude/**\`, \`CLAUDE.md\`, \`AGENTS.md\`, \`.github/**\` ` +
+                         `or \`.gitignore\` shape AI assistant behavior and PR safeguards across ` +
+                         `the project. CODEOWNERS requires maintainer review.\n\n` +
+                         `Checklist for the author:\n` +
+                         `- [ ] PR body has a \`## Notes\` section explaining the change\n` +
+                         `- [ ] No silent relaxations of \`.claude/settings.json\` denylist\n` +
+                         `- [ ] No new \`allow\` entries broader than necessary (avoid \`Bash(*)\`)\n` +
+                         `- [ ] If a path-scoped rule changes, its \`paths:\` globs are correct\n` +
+                         `- [ ] If a new skill, agent, or hook is added, it follows the existing structure`;
+
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number
+            });
+
+            const existing = comments.find(c => c.body && c.body.includes(marker));
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body: body
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: body
+              });
+            }
