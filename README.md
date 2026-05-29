@@ -10,8 +10,10 @@ Centraliza los _defaults_ que toda la organización hereda: reusable
 workflows, community files, catálogo de labels y plantillas de issues/PRs.
 
 Mantenedor: **Planasa Digital Apps**. Las decisiones arquitectónicas que
-respaldan este repo viven como ADRs en
-[`claude-sanbox/docs/adr/`](https://github.com/Planasa-Digital-Apps-Organization/claude-sanbox/tree/master/docs/adr).
+respaldan este repo viven como ADRs en [`docs/adr/`](./docs/adr). La decisión
+de template canónico (ADR 0002) permanece en
+[`claude-sanbox`](https://github.com/Planasa-Digital-Apps-Organization/claude-sanbox/blob/master/docs/adr/0002-reusable-template-baseline.md)
+por ser específica de ese repo.
 
 ## Contenido
 
@@ -103,7 +105,7 @@ jobs:
 ### 6. Primer commit y push
 
 Convención de bootstrap (ver ADR 0003 y
-[`docs/runbooks/git-flow.md`](https://github.com/Planasa-Digital-Apps-Organization/claude-sanbox/blob/master/docs/runbooks/git-flow.md)):
+[`docs/runbooks/git-flow.md`](./docs/runbooks/git-flow.md)):
 
 ```bash
 git checkout -b feature/<JIRA>-<NNN>-bootstrap-template
@@ -132,7 +134,7 @@ credenciales en ADR 0003.
 ## Visibility
 
 Este repo es **public**. La decisión y el porqué están en ADR
-[0004](https://github.com/Planasa-Digital-Apps-Organization/claude-sanbox/blob/master/docs/adr/0004-org-github-visibility-public.md):
+[0004](./docs/adr/0004-org-github-visibility-public.md):
 con `internal`, la herencia de issue templates no propaga a los repos
 hijos (limitación de GitHub no documentada oficialmente).
 
