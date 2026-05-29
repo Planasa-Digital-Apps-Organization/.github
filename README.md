@@ -40,7 +40,7 @@ permissions:
 
 jobs:
   flag:
-    uses: Planasa-Digital-Apps-Organization/.github/.github/workflows/sensitive-paths-check.yml@main
+    uses: Planasa-Digital-Apps-Organization/.github/.github/workflows/sensitive-paths-check.yml@master
 ```
 
 ## Required org secret
@@ -52,14 +52,15 @@ Configure it once at `Settings → Secrets and variables → Actions` of the
 
 ## Versioning
 
-Bootstrap: callers reference `@main` to track latest. Once the workflow
+Bootstrap: callers reference `@master` to track latest. Once the workflow
 contract stabilises we'll cut `v1` tag and switch callers to `@v1` so
 breaking changes require explicit opt-in.
 
 ## Bootstrap exception
 
-The initial scaffold of this repo was committed directly to `main`
-(no PR, no branch protection). That's intentional: this repo defines the
-doctrine that protects other repos, so it has to exist before the
-doctrine applies to it. Subsequent changes follow the standard flow
-(feature branch → PR → CODEOWNERS review).
+The initial scaffold of this repo was committed directly to `master`
+(no PR, no branch protection). The org-level ruleset was temporarily
+switched to `Evaluate` on `master` to unblock the first push; standard
+enforcement on the other branch patterns (`feature/*`, `hotfix/*`,
+`release/*`, `develop`) remained active. Subsequent changes follow the
+standard flow (feature branch → PR → CODEOWNERS review).

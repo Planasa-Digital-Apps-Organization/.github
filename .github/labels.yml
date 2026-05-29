@@ -4,7 +4,7 @@
 # Format: array of { name, color (6-hex, no #), description }.
 # Description max 100 chars (GitHub API limit).
 #
-# When adding a label here, push to main and let the sync workflow run
+# When adding a label here, push to master and let the sync workflow run
 # (or trigger it manually via workflow_dispatch).
 
 - name: 'area:ai-behavior'
