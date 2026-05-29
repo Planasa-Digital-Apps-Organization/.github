@@ -1,0 +1,102 @@
+name: sync-template
+
+# Reusable workflow: pull sync-safe paths from the claude-sanbox template into
+# the caller repo at the pinned version, then open a PR with the diff.
+# Derived repos consume this via a thin caller stub — see
+# docs/contributing/sync-template-stub.md.
+on:
+  workflow_call:
+    secrets:
+      template-token:
+        description: >-
+          Token with read access to the template repo (claude-sanbox). Required
+          because claude-sanbox is private: the caller's default GITHUB_TOKEN
+          cannot read another private repo's tarball. Pass an org PAT/app token
+          via `secrets: inherit` or an explicit `secrets:` map. Falls back to
+          the caller's GITHUB_TOKEN if the template repo is ever made public.
+        required: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout caller repo
+        uses: actions/checkout@v5
+
+      - name: Read template-version.yml
+        id: cfg
+        run: |
+          set -euo pipefail
+          if [ ! -f .claude/template-version.yml ]; then
+            echo "::error::.claude/template-version.yml not found. See docs/contributing/sync-template-stub.md"
+            exit 1
+          fi
+          version="$(yq -r '.version' .claude/template-version.yml)"
+          if [ -z "${version}" ] || [ "${version}" = "null" ]; then
+            echo "::error::No 'version' key in .claude/template-version.yml"
+            exit 1
+          fi
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
+          # Capture sync-paths (one per line) for downstream steps.
+          yq -r '.sync-paths[]' .claude/template-version.yml > "${RUNNER_TEMP}/sync-paths.txt"
+          echo "Template version: ${version}"
+          echo "Sync paths:"; cat "${RUNNER_TEMP}/sync-paths.txt"
+
+      - name: Download template tarball at pinned version
+        env:
+          GH_TOKEN: ${{ secrets.template-token || github.token }}
+        run: |
+          set -euo pipefail
+          gh api "/repos/Planasa-Digital-Apps-Organization/claude-sanbox/tarball/${{ steps.cfg.outputs.version }}" \
+            > "${RUNNER_TEMP}/template.tar.gz"
+          mkdir -p "${RUNNER_TEMP}/template"
+          tar xzf "${RUNNER_TEMP}/template.tar.gz" -C "${RUNNER_TEMP}/template" --strip-components=1
+
+      - name: Sync sync-safe paths (no delete)
+        run: |
+          set -euo pipefail
+          while IFS= read -r path; do
+            [ -z "${path}" ] && continue
+            src="${RUNNER_TEMP}/template/${path}"
+            if [ ! -e "${src}" ]; then
+              echo "::warning::Path '${path}' not present in template ${{ steps.cfg.outputs.version }} — skipping"
+              continue
+            fi
+            echo "Syncing ${path}"
+            if [ -d "${src}" ]; then
+              mkdir -p "./${path}"
+              # Trailing slashes + no --delete: copy/overwrite from template,
+              # preserve repo-local additions under the same path.
+              rsync -a "${src}/" "./${path}/"
+            else
+              mkdir -p "$(dirname "./${path}")"
+              rsync -a "${src}" "./${path}"
+            fi
+          done < "${RUNNER_TEMP}/sync-paths.txt"
+
+      - name: Open sync PR if anything changed
+        # create-pull-request no-ops when the working tree is clean, so it
+        # subsumes the `git diff --quiet` gate described in the handoff.
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.template-token || github.token }}
+          branch: chore/sync-template-${{ steps.cfg.outputs.version }}
+          delete-branch: true
+          commit-message: "chore(template): sync sync-safe paths to ${{ steps.cfg.outputs.version }} [ID-1237]"
+          title: "chore(template): sync to ${{ steps.cfg.outputs.version }} [ID-1237]"
+          labels: |
+            area:ai-behavior
+            automation
+          body: |
+            Automated template sync to `${{ steps.cfg.outputs.version }}`.
+
+            Pulled sync-safe paths from `claude-sanbox` at the version pinned in
+            `.claude/template-version.yml`. No `--delete`, so repo-local additions
+            under the synced paths are preserved.
+
+            Review the diff before merging — `.claude/**` / `AGENTS.md` are
+            CODEOWNERS-gated.
