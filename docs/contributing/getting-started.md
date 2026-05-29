@@ -246,15 +246,8 @@ Actions que el workflow corrió.
 
 ---
 
-## TODO — screenshots pendientes de capturar
-
-Los placeholders `images/0X-*.png` deben capturarse y commitearse a
-`docs/contributing/images/`. Sin ellos, la guía sigue siendo legible,
-pero las referencias visuales ayudan al primer-timer.
+## TODO — screenshot pendiente
 
 | Fichero | Qué capturar |
 | --- | --- |
-| `images/01-create-branch.png` | Vista "Branches" mostrando la feature branch recién creada (ej. `feature/BCR-1234-...`). |
-| `images/02-create-pr.png` | Editor de "Create pull request" con la plantilla pre-rellenada (Summary / Why / Test plan visibles). |
-| `images/03-status-checks.png` | Sección "All checks" de un PR mostrando workflows corriendo (con el ojo amarillo) o completed (verde). |
 | `images/04-squash-merge.png` | Dropdown del botón "Merge" abierto, con "Squash and merge" seleccionado. |
