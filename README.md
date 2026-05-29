@@ -1,5 +1,9 @@
 # Planasa Digital Apps — Organization defaults
 
+> 📘 **¿Vas a contribuir a algún repo del org?**
+> Empieza por [**CONTRIBUTING.md**](CONTRIBUTING.md) — branching, commits, PRs y reviews en una página.
+> Si es tu primer PR, salta directo a la [**guía paso a paso**](docs/contributing/getting-started.md) con comandos copy-paste, screenshots y troubleshooting.
+
 Repositorio especial `.github` para
 [Planasa-Digital-Apps-Organization](https://github.com/Planasa-Digital-Apps-Organization).
 Centraliza los _defaults_ que toda la organización hereda: reusable
