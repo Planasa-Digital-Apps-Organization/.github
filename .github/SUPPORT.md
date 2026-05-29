@@ -11,7 +11,7 @@ solicitud.
 | --- | --- |
 | Reportar un **bug** | Abre un issue con la plantilla _Bug report_ del repositorio afectado. |
 | Proponer una **mejora / feature** | Abre un issue con la plantilla _Feature request_. |
-| Reportar una **vulnerabilidad de seguridad** | **No abras un issue público.** Sigue la [política de seguridad](./SECURITY.md). |
+| Reportar una **vulnerabilidad de seguridad** | **No abras un issue público.** Sigue la [política de seguridad](https://github.com/Planasa-Digital-Apps-Organization/.github/blob/master/.github/SECURITY.md). |
 | Una **duda** de uso o de proyecto | Canal interno de IT / equipo de Digital Apps. |
 | Algo sobre **doctrina, branching o convenciones** | Consulta los [runbooks y ADR](https://github.com/Planasa-Digital-Apps-Organization/claude-sanbox/tree/master/docs) en `claude-sanbox`. |
 
@@ -26,4 +26,4 @@ solicitud.
 
 El soporte lo presta el equipo de Digital Apps en horario laboral. No hay
 garantía de respuesta inmediata salvo en incidentes de seguridad, que siguen los
-SLA descritos en la [política de seguridad](./SECURITY.md).
+SLA descritos en la [política de seguridad](https://github.com/Planasa-Digital-Apps-Organization/.github/blob/master/.github/SECURITY.md).

@@ -51,7 +51,7 @@ catálogo de labels (`sync-labels.yml`) y los reusable workflows. El `CODEOWNERS
 
 - **`CONTRIBUTING.md`**: pendiente. La doctrina de contribución (Conventional
   Commits + sufijo JIRA, branching) vive de momento en el
-  [perfil del org](../profile/README.md) y en los runbooks de `claude-sanbox`.
+  [perfil del org](https://github.com/Planasa-Digital-Apps-Organization/.github/blob/master/profile/README.md) y en los runbooks de `claude-sanbox`.
 - **`FUNDING.yml`**: no se incluye. La organización es interna y no acepta
   patrocinio.
 - **`SECURITY.md`**: en borrador. El buzón de contacto y los SLA están
