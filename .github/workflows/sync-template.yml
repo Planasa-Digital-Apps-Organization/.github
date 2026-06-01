@@ -84,7 +84,11 @@ jobs:
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.TEMPLATE_TOKEN || github.token }}
-          branch: chore/sync-template-${{ steps.cfg.outputs.version }}
+          # Branch name must satisfy the enterprise naming ruleset, which only
+          # allows feature/<JIRA>-<NNN>-*, hotfix/*, release/*, etc. A plain
+          # chore/* branch is rejected at creation, so the sync PR rides the
+          # ID-1237 feature namespace.
+          branch: feature/ID-1237-sync-template-${{ steps.cfg.outputs.version }}
           delete-branch: true
           commit-message: "chore(template): sync sync-safe paths to ${{ steps.cfg.outputs.version }} [ID-1237]"
           title: "chore(template): sync to ${{ steps.cfg.outputs.version }} [ID-1237]"

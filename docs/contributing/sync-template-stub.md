@@ -74,6 +74,10 @@ workflow falls back to the caller's `GITHUB_TOKEN` and no extra secret is needed
 
 ## What a run produces
 
-A run opens a `chore/sync-template-<version>` PR labelled `area:ai-behavior` and
-`automation`. Review before merging — `.claude/**` and `AGENTS.md` are
+A run opens a `feature/ID-1237-sync-template-<version>` PR labelled
+`area:ai-behavior` and `automation`. (The branch sits in the `feature/<JIRA>`
+namespace because the enterprise naming ruleset rejects `chore/*` branches at
+creation; if `chore/**` is later excluded from that ruleset, this can revert to
+a `chore/sync-template-<version>` name.) Review before merging — `.claude/**`
+and `AGENTS.md` are
 CODEOWNERS-gated. If nothing changed, no PR is opened.
