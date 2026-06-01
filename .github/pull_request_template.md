@@ -4,7 +4,7 @@
 
 ## Why
 
-<!-- 1-3 sentences. Motive not derivable from the diff. Link the JIRA ticket if any: https://planasa.atlassian.net/browse/<JIRA>-<NNN> -->
+<!-- 1-3 frases. El motivo que no se deduce del diff. Enlaza el ticket JIRA si lo hay: https://planasa.atlassian.net/browse/<JIRA>-<NNN> -->
 
 ## Test plan
 
@@ -12,11 +12,11 @@
 - [ ] 
 
 <!--
-Add a `## Notes` section below if this PR touches any of:
-  - secrets, permissions, CI/workflows, hooks, tokens
+Añade una sección `## Notes` abajo si este PR toca alguno de:
+  - secrets, permisos, CI/workflows, hooks, tokens
   - .claude/**, CLAUDE.md, AGENTS.md
   - .github/**, .gitignore
-  - docs/adr/ (ADR amendments after Accepted are forbidden — only Status changes)
+  - docs/adr/ (un ADR Accepted no se reescribe — solo cambia su Status)
 
-CODEOWNERS will require maintainer review for these paths regardless.
+Para esos paths, CODEOWNERS exigirá revisión de un maintainer de todas formas.
 -->

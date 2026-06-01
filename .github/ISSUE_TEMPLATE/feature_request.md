@@ -5,29 +5,29 @@ title: "feat: <descripción breve>"
 labels: ["type:feature"]
 ---
 
-## Problema / necesidad
+## Problem / need
 
 <!-- Qué problema resuelve esto. Quién lo sufre. Qué pasa hoy si no se hace. -->
 
-## Propuesta
+## Proposal
 
 <!-- Cómo lo resolverías. Boceto de la solución, no diseño final. -->
 
-## Alternativas consideradas
+## Alternatives considered
 
 <!-- Otras formas de resolver el mismo problema y por qué la propuesta es mejor. Si no las consideraste, dilo. -->
 
-## Criterios de aceptación
+## Acceptance criteria
 
 - [ ] 
 - [ ] 
 
-## Contexto
+## Context
 
 - **Repo / módulo afectado**: 
 - **Stakeholder solicitante**: 
 - **Urgencia / dependencias**: <!-- ¿bloquea algo? ¿depende de otro ticket? -->
 
-## Notas
+## Notes
 
 <!-- Mocks, refs a tickets JIRA (https://planasa.atlassian.net/browse/<JIRA>-<NNN>), métricas que justifican la prioridad. -->
