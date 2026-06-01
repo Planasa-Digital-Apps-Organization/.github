@@ -42,16 +42,16 @@ jobs:
         with:
           script: |
             const marker = '<!-- sensitive-paths-bot -->';
-            const body = `${marker}\n⚠️ **This PR touches sensitive paths.**\n\n` +
-                         `Paths under \`.claude/**\`, \`CLAUDE.md\`, \`AGENTS.md\`, \`.github/**\` ` +
-                         `or \`.gitignore\` shape AI assistant behavior and PR safeguards across ` +
-                         `the project. CODEOWNERS requires maintainer review.\n\n` +
-                         `Checklist for the author:\n` +
-                         `- [ ] PR body has a \`## Notes\` section explaining the change\n` +
-                         `- [ ] No silent relaxations of \`.claude/settings.json\` denylist\n` +
-                         `- [ ] No new \`allow\` entries broader than necessary (avoid \`Bash(*)\`)\n` +
-                         `- [ ] If a path-scoped rule changes, its \`paths:\` globs are correct\n` +
-                         `- [ ] If a new skill, agent, or hook is added, it follows the existing structure`;
+            const body = `${marker}\n⚠️ **Este PR toca paths sensibles.**\n\n` +
+                         `Los paths bajo \`.claude/**\`, \`CLAUDE.md\`, \`AGENTS.md\`, \`.github/**\` ` +
+                         `o \`.gitignore\` condicionan el comportamiento del asistente de IA y los ` +
+                         `safeguards de PR de todo el proyecto. CODEOWNERS exige revisión de un maintainer.\n\n` +
+                         `Checklist para el autor:\n` +
+                         `- [ ] El body del PR tiene una sección \`## Notes\` explicando el cambio\n` +
+                         `- [ ] No se relaja en silencio el denylist de \`.claude/settings.json\`\n` +
+                         `- [ ] No hay entradas \`allow\` más amplias de lo necesario (evita \`Bash(*)\`)\n` +
+                         `- [ ] Si cambia una regla con scope de path, sus globs \`paths:\` son correctos\n` +
+                         `- [ ] Si se añade un skill, agent o hook nuevo, sigue la estructura existente`;
 
             const { data: comments } = await github.rest.issues.listComments({
               owner: context.repo.owner,

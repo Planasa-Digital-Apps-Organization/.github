@@ -55,6 +55,58 @@ Lo que se espera en cada PR:
 Las ramas `master`, `develop` y `release/*` están protegidas por enterprise
 rulesets. Sólo se mergea con la review aprobada.
 
+## Política de idioma
+
+El criterio es **la audiencia y la capa del contenido, no la extensión del
+archivo**. Tres capas:
+
+### Capa 1 — Documentación humana y políticas
+
+`README.md`, `profile/README.md`, este `CONTRIBUTING.md`,
+`docs/contributing/*`, y los community files de `.github/`
+(`CODE_OF_CONDUCT.md`, `GOVERNANCE.md`, `SECURITY.md`, `SUPPORT.md`).
+
+→ **Español como lengua base**, incluidos los encabezados. La prosa es
+española; los tecnicismos siguen las reglas de terminología de abajo.
+
+### Capa 2 — Superficies que rellena o lee un contribuidor
+
+Plantillas de issue, plantilla de PR, comentario del bot `sensitive-paths`,
+el `about` de `ISSUE_TEMPLATE/config.yml`.
+
+→ **Prosa de ayuda, placeholders y descripciones en español.** El inglés se
+reserva para:
+
+- **Encabezados estructurales `##`** (`## Summary`, `## Why`, `## Notes`,
+  `## Observed behavior`, …). Actúan como contrato citado por la doctrina y
+  por el workflow, así que se mantienen estables en inglés.
+- **Tokens de convención**: prefijos de commit (`feat:`, `fix:`), nombres de
+  label (`type:bug`, `area:ai-behavior`).
+
+### Capa 3 — Ficheros de máquina e infraestructura
+
+`labels.yml`, `.github/workflows/*.yml`, código JS inline.
+
+→ **Inglés.** Es el idioma del ecosistema GitHub Actions y se lee en contexto
+de código. **Excepción**: cualquier string que GitHub renderice a una persona
+(p. ej. el cuerpo del comentario del bot o el `about` de un contact link) sube
+a Capa 2 y va en español.
+
+## Reglas de terminología (prosa española, Capas 1 y 2)
+
+- **Sustantivos-producto de Git/GitHub/CI se mantienen en inglés**, sin
+  traducir ni cursiva: issue, pull request / PR, branch, merge, label,
+  workflow, ruleset, commit, secret, runbook, advisory.
+- **Identificadores de código, CLI y paths nunca se traducen ni se flexionan**:
+  `master`, `develop`, `workflow_dispatch`, `.github/`.
+- **Nada de verbos spanglish.** No "bootstrappear / mergear / commitear". Usar
+  *verbo español + sustantivo inglés*: "inicializar el repo", "hacer merge"
+  o "fusionar", "crear un commit", "crear un tag".
+- **Acrónimos en mayúscula tal cual**: ADR, PR, CI, SLA, RCE, PAT.
+- **Si existe término español asentado y sin ambigüedad, úsalo en prosa**:
+  "plantilla" en lugar de "template", salvo cuando "issue template" sea el
+  nombre propio de la feature de GitHub.
+
 ## Código de conducta
 
 Se aplica el [`CODE_OF_CONDUCT.md`](.github/CODE_OF_CONDUCT.md) heredado

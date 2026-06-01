@@ -14,7 +14,7 @@ Org de las aplicaciones digitales internas de Planasa. Aquí viven los repositor
 - **Commits**: Conventional Commits + sufijo JIRA `[<PROJ>-<NNN>]`. Tipos: `feat | fix | docs | style | refactor | test | chore`. Prefijos JIRA permitidos: `BCR | BTS | ID | MAM | GIT`.
 - **PRs**: plantilla heredada de este repo (`## Summary / ## Why / ## Test plan`). Si tocan paths sensibles (`.claude/**`, `CLAUDE.md`, `AGENTS.md`, `.github/**`) → sección `## Notes` obligatoria.
 
-## Bootstrap de un repo nuevo
+## Puesta en marcha de un repo nuevo
 
 1. Copia `.claude/`, `AGENTS.md`, `.github/CODEOWNERS`, `.github/pull_request_template.md` y `docs/{adr,runbooks}/` desde `claude-sanbox`.
 2. Adopta el reusable workflow `sensitive-paths-check.yml` añadiendo el caller stub a tu repo (snippet en el [README de este `.github`](https://github.com/Planasa-Digital-Apps-Organization/.github)).

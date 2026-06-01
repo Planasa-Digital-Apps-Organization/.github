@@ -5,31 +5,31 @@ title: "bug: <descripción breve>"
 labels: ["type:bug"]
 ---
 
-## Comportamiento observado
+## Observed behavior
 
 <!-- Qué pasó. Sé concreto. -->
 
-## Comportamiento esperado
+## Expected behavior
 
 <!-- Qué debería haber pasado en su lugar. -->
 
-## Pasos para reproducir
+## Steps to reproduce
 
 1. 
 2. 
 3. 
 
-## Contexto
+## Context
 
 - **Repo / módulo afectado**: 
 - **Versión / commit**: 
 - **Entorno**: <!-- prod / staging / dev / local -->
 - **Usuario afectado / scope**: <!-- todos los usuarios / un cliente concreto / sólo en mi máquina -->
 
-## Logs / capturas
+## Logs / screenshots
 
 <!-- Pega stack traces dentro de bloques ``` ... ``` y capturas como imágenes. NO incluyas credenciales, tokens ni datos de cliente. -->
 
-## Notas adicionales
+## Additional notes
 
 <!-- Workaround que aplicaste, hipótesis sobre la causa, link a PRs relacionados, etc. -->
