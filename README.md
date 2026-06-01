@@ -6,8 +6,8 @@
 
 Repositorio especial `.github` para
 [Planasa-Digital-Apps-Organization](https://github.com/Planasa-Digital-Apps-Organization).
-Centraliza los _defaults_ que toda la organización hereda: reusable
-workflows, community files, catálogo de labels y plantillas de issues/PRs.
+Centraliza los valores por defecto que toda la organización hereda: workflows
+reutilizables, community files, catálogo de labels y plantillas de issues/PRs.
 
 Mantenedor: **Planasa Digital Apps**. Las decisiones arquitectónicas que
 respaldan este repo viven como ADRs en [`docs/adr/`](./docs/adr). La decisión
@@ -20,16 +20,16 @@ por ser específica de ese repo.
 | Categoría | Path | Función |
 | --- | --- | --- |
 | **Landing pública** | `profile/README.md` | Página del org (`github.com/<org>`). Tarjeta de visita. |
-| **Catálogo de labels** | `.github/labels.yml` | Source of truth declarativo de labels org-wide. |
+| **Catálogo de labels** | `.github/labels.yml` | Fuente de la verdad declarativa de los labels de toda la org. |
 | **Sync de labels** | `.github/workflows/sync-labels.yml` | Propaga `labels.yml` a todos los repos no-archivados. Triggers: push a `master` con cambios, schedule semanal, `workflow_dispatch`. |
 | **Reusable: sensitive paths** | `.github/workflows/sensitive-paths-check.yml` | `workflow_call`. Etiqueta `area:ai-behavior` + checklist comment en PRs que tocan paths sensibles. Invocada por stub per-repo. |
 | **Community defaults** | `.github/SECURITY.md`, `.github/pull_request_template.md`, `.github/ISSUE_TEMPLATE/*` | Heredados automáticamente por todos los repos del org que no tengan los suyos propios. |
 
-## Setup de un proyecto nuevo basado en `claude-sanbox`
+## Puesta en marcha de un proyecto nuevo basado en `claude-sanbox`
 
 `claude-sanbox` es el template canónico (ADR
 [0002](https://github.com/Planasa-Digital-Apps-Organization/claude-sanbox/blob/master/docs/adr/0002-reusable-template-baseline.md)).
-Para bootstrappear un repo nuevo:
+Para inicializar un repo nuevo:
 
 ### 1. Crear el repo
 
@@ -104,8 +104,8 @@ jobs:
 
 ### 6. Primer commit y push
 
-Convención de bootstrap (ver ADR 0003 y
-[`docs/runbooks/git-flow.md`](./docs/runbooks/git-flow.md)):
+Convención de arranque (ver ADR 0003 y
+[`docs/runbooks/git-flow.md`](https://github.com/Planasa-Digital-Apps-Organization/claude-sanbox/blob/master/docs/runbooks/git-flow.md)):
 
 ```bash
 git checkout -b feature/<JIRA>-<NNN>-bootstrap-template
@@ -160,7 +160,7 @@ uses: Planasa-Digital-Apps-Organization/.github/.github/workflows/<name>.yml@mas
 
 Esto significa que cualquier cambio en el reusable afecta inmediatamente
 a todos los callers. Cuando el contrato de cada workflow se estabilice,
-cortaremos tags `v1`/`v2` y los callers migrarán a `@v1`. Pendiente.
+crearemos tags `v1`/`v2` y los callers migrarán a `@v1`. Pendiente.
 
 ## Contribuir cambios a este repo
 

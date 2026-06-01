@@ -20,7 +20,7 @@ Si la vulnerabilidad afecta a producción (datos clientes, credenciales expuesta
 | --- | --- | --- |
 | Critical | < 24 h | < 7 días |
 | High | < 48 h | < 14 días |
-| Medium / Low | < 5 días | next planned release |
+| Medium / Low | < 5 días | siguiente release planificada |
 
 <!-- TODO: validar SLAs con el equipo. Placeholders razonables hasta confirmación. -->
 
@@ -30,7 +30,7 @@ Si la vulnerabilidad afecta a producción (datos clientes, credenciales expuesta
 - Una vez resuelta, publicaremos un advisory en el repo afectado (GitHub Security Advisories) referenciando el CVE si aplica.
 - Acreditamos al reportador salvo que prefiera anonimato.
 
-## Out of scope
+## Fuera de alcance
 
 - Vulnerabilidades en dependencias de terceros sin impacto demostrable en nuestros repos (reportar al upstream).
 - Problemas de configuración local del desarrollador (no son seguridad de producto).

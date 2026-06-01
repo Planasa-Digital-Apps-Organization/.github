@@ -66,9 +66,11 @@ changes when you deliberately bump the ref.
 
 `claude-sanbox` is **private**, so the caller's default `GITHUB_TOKEN` cannot
 read its tarball. Provide a token with read access to `claude-sanbox` — an org
-PAT or GitHub App token exposed as a secret named `template-token` (forwarded by
-`secrets: inherit`). If `claude-sanbox` is later made public, the workflow falls
-back to the caller's `GITHUB_TOKEN` and no extra secret is needed.
+PAT or GitHub App token exposed as a repository secret named `TEMPLATE_TOKEN`
+(uppercase, no hyphen — GitHub secret names allow only `[A-Za-z0-9_]`; matches
+the `<CAPABILITY>_TOKEN` convention of ADR 0004). It is forwarded to the reusable
+workflow via `secrets: inherit`. If `claude-sanbox` is later made public, the
+workflow falls back to the caller's `GITHUB_TOKEN` and no extra secret is needed.
 
 ## What a run produces
 

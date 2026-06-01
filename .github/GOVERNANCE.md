@@ -42,16 +42,18 @@ Una vez en estado **Accepted**, un ADR no se reescribe: sólo cambia su `Status`
 ## Qué se hereda desde este repo
 
 GitHub propaga automáticamente a cualquier repo que no tenga el suyo propio:
-`CODE_OF_CONDUCT.md`, `SECURITY.md`, `SUPPORT.md`, este `GOVERNANCE.md`, las
-plantillas de issues y el `pull_request_template.md`. Además se distribuyen el
-catálogo de labels (`sync-labels.yml`) y los reusable workflows. El `CODEOWNERS`
-**no** se hereda: cada repo define el suyo.
+`CODE_OF_CONDUCT.md`, `SECURITY.md`, `SUPPORT.md`, `CONTRIBUTING.md`, este
+`GOVERNANCE.md`, las plantillas de issues y el `pull_request_template.md`.
+Además se distribuyen el catálogo de labels (`sync-labels.yml`) y los reusable
+workflows. El `CODEOWNERS` **no** se hereda: cada repo define el suyo.
 
 ## Decisiones conscientes sobre community files
 
-- **`CONTRIBUTING.md`**: pendiente. La doctrina de contribución (Conventional
-  Commits + sufijo JIRA, branching) vive de momento en el
-  [perfil del org](https://github.com/Planasa-Digital-Apps-Organization/.github/blob/master/profile/README.md) y en los runbooks de `claude-sanbox`.
+- **`CONTRIBUTING.md`**: incluido (en la raíz del repo). Recoge el flujo de
+  contribución (Conventional Commits + sufijo JIRA, branching, reviews), la
+  guía de primer PR y la política de idioma del repo. Ver
+  [`CONTRIBUTING.md`](https://github.com/Planasa-Digital-Apps-Organization/.github/blob/master/CONTRIBUTING.md);
+  el detalle del branching sigue en los runbooks de `claude-sanbox`.
 - **`FUNDING.yml`**: no se incluye. La organización es interna y no acepta
   patrocinio.
 - **`SECURITY.md`**: en borrador. El buzón de contacto y los SLA están
