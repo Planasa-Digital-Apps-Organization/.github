@@ -27,14 +27,14 @@ ejemplos buenos y errores comunes.
 
 Prefijos JIRA permitidos: `BCR`, `BTS`, `ID`, `MAM`, `GIT`.
 
-## Reportar bugs y proponer features
+## Reportar bugs, proponer features y soporte
 
-- **Bug**: abre un issue con la plantilla _Bug report_.
-- **Feature**: abre un issue con la plantilla _Feature request_.
-- **Vulnerabilidad de seguridad**: **no abras issue público**. Sigue
-  [`SECURITY.md`](.github/SECURITY.md).
-- **Duda no urgente o de soporte**: ver [`SUPPORT.md`](.github/SUPPORT.md)
-  para el canal apropiado.
+Los issues de GitHub están deshabilitados a nivel de organización. Para
+reportar un bug, proponer una mejora o plantear una duda, usa el canal
+correspondiente descrito en [`SUPPORT.md`](.github/SUPPORT.md).
+
+- **Vulnerabilidad de seguridad**: **no la reportes por canales públicos**.
+  Sigue [`SECURITY.md`](.github/SECURITY.md).
 
 ## Reviews
 
@@ -80,8 +80,7 @@ reserva para:
 - **Encabezados estructurales `##`** (`## Summary`, `## Why`, `## Notes`,
   `## Observed behavior`, …). Actúan como contrato citado por la doctrina y
   por el workflow, así que se mantienen estables en inglés.
-- **Tokens de convención**: prefijos de commit (`feat:`, `fix:`), nombres de
-  label (`type:bug`, `area:ai-behavior`).
+- **Tokens de convención**: nombres de label (`type:bug`, `area:ai-behavior`).
 
 ### Capa 3 — Ficheros de máquina e infraestructura
 
@@ -91,6 +90,13 @@ reserva para:
 de código. **Excepción**: cualquier string que GitHub renderice a una persona
 (p. ej. el cuerpo del comentario del bot o el `about` de un contact link) sube
 a Capa 2 y va en español.
+
+### Mensajes de commit
+
+Los mensajes de commit van **íntegramente en inglés** — tanto el subject
+(`feat(api): add customer export endpoint [BCR-1234]`) como el body. Son
+artefactos de máquina que se leen en `git log` y en el contexto del código,
+no documentación humana. El sufijo `[<JIRA>-<NNN>]` sigue siendo obligatorio.
 
 ## Reglas de terminología (prosa española, Capas 1 y 2)
 
