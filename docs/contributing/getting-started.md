@@ -96,7 +96,10 @@ Formato obligatorio:
 
 `<type>` ∈ `feat | fix | docs | style | refactor | test | chore`.
 `<scope>` opcional, single token lowercase.
-`<description>` imperativa, ≤ 72 chars, sin punto final.
+`<description>` imperativa, **en inglés**, ≤ 72 chars, sin punto final.
+
+El mensaje de commit va íntegramente en inglés (subject y body). Es un
+artefacto de máquina que se lee en `git log`, no documentación humana.
 
 Stagea explícito (evita `git add .` o `git add -A` para no commitear
 secretos por accidente):
