@@ -46,6 +46,12 @@ jobs:
             exit 1
           fi
           echo "version=${version}" >> "$GITHUB_OUTPUT"
+          # Dot-free slug for the PR branch name: the enterprise naming ruleset
+          # allows only ^feature/[A-Z]{2,10}-[0-9]{1,5}(-[a-z0-9]+)*$, so a raw
+          # version like "v0.1.0" (dots) is rejected. Lowercase + collapse any
+          # non-alphanumeric run to a single dash. "v0.1.0" -> "v0-1-0".
+          slug="$(printf '%s' "${version}" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g; s/^-+//; s/-+$//')"
+          echo "version_slug=${slug}" >> "$GITHUB_OUTPUT"
           # Capture sync-paths (one per line) for downstream steps.
           yq -r '.sync-paths[]' .claude/template-version.yml > "${RUNNER_TEMP}/sync-paths.txt"
           echo "Template version: ${version}"
@@ -100,7 +106,7 @@ jobs:
           # allows feature/<JIRA>-<NNN>-*, hotfix/*, release/*, etc. A plain
           # chore/* branch is rejected at creation, so the sync PR rides the
           # ID-1237 feature namespace.
-          branch: feature/ID-1237-sync-template-${{ steps.cfg.outputs.version }}
+          branch: feature/ID-1237-sync-template-${{ steps.cfg.outputs.version_slug }}
           delete-branch: true
           commit-message: "chore(template): sync sync-safe paths to ${{ steps.cfg.outputs.version }} [ID-1237]"
           title: "chore(template): sync to ${{ steps.cfg.outputs.version }} [ID-1237]"
