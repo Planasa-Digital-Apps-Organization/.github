@@ -9,13 +9,16 @@ on:
     secrets:
       TEMPLATE_TOKEN:
         description: >-
-          READ-ONLY token on the template repo (claude-sanbox), used ONLY to
-          download its tarball. Required because claude-sanbox is private: the
-          caller's default GITHUB_TOKEN cannot read another private repo. This
-          token is least-privilege (Contents: Read on claude-sanbox only) and is
-          NOT used to open the sync PR — that uses the caller's GITHUB_TOKEN.
-          Pass via `secrets: inherit` or an explicit `secrets:` map. Falls back
-          to the caller's GITHUB_TOKEN if the template repo is ever made public.
+          PAT (or GitHub App token) used both to download the private template
+          tarball AND to open the sync PR. Two reasons the caller's default
+          GITHUB_TOKEN is not enough: (1) it cannot read another private repo
+          (claude-sanbox); (2) the enterprise disables "Allow GitHub Actions to
+          create and approve pull requests", so a GITHUB_TOKEN-created PR is
+          rejected — a PAT bypasses that. Least-privilege scope: Contents:Read
+          on claude-sanbox PLUS Contents:Write + Pull requests:Write on the
+          consumer repos. The org secret must be VISIBLE to the consumer repos
+          (not claude-sanbox). Pass via `secrets: inherit`. Same pattern as the
+          existing RELEASE_PLEASE_TOKEN / LABEL_SYNC_TOKEN org PATs.
         required: false
 
 permissions:
@@ -43,6 +46,12 @@ jobs:
             exit 1
           fi
           echo "version=${version}" >> "$GITHUB_OUTPUT"
+          # Dot-free slug for the PR branch name: the enterprise naming ruleset
+          # allows only ^feature/[A-Z]{2,10}-[0-9]{1,5}(-[a-z0-9]+)*$, so a raw
+          # version like "v0.1.0" (dots) is rejected. Lowercase + collapse any
+          # non-alphanumeric run to a single dash. "v0.1.0" -> "v0-1-0".
+          slug="$(printf '%s' "${version}" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g; s/^-+//; s/-+$//')"
+          echo "version_slug=${slug}" >> "$GITHUB_OUTPUT"
           # Capture sync-paths (one per line) for downstream steps.
           yq -r '.sync-paths[]' .claude/template-version.yml > "${RUNNER_TEMP}/sync-paths.txt"
           echo "Template version: ${version}"
@@ -85,18 +94,19 @@ jobs:
         # subsumes the `git diff --quiet` gate described in the handoff.
         uses: peter-evans/create-pull-request@v6
         with:
-          # The PR is opened in the CALLER repo, so it must use the caller's
-          # auto-minted GITHUB_TOKEN (scoped by this workflow's `permissions:`
-          # block above) — NOT TEMPLATE_TOKEN, which is a least-privilege
-          # read-only token on the private template repo and cannot write here.
-          # Requires the caller repo/org setting "Allow GitHub Actions to create
-          # and approve pull requests" to be enabled.
-          token: ${{ github.token }}
+          # Must be a PAT, not github.token: the enterprise disables "Allow
+          # GitHub Actions to create and approve pull requests", so a PR opened
+          # with the auto-minted GITHUB_TOKEN is rejected. TEMPLATE_TOKEN (a PAT
+          # with Pull requests:Write on the caller repo) bypasses that, same as
+          # RELEASE_PLEASE_TOKEN does for release-please. Fallback to github.token
+          # only matters if the template repo is public AND the enterprise ever
+          # re-enables Actions-authored PRs.
+          token: ${{ secrets.TEMPLATE_TOKEN || github.token }}
           # Branch name must satisfy the enterprise naming ruleset, which only
           # allows feature/<JIRA>-<NNN>-*, hotfix/*, release/*, etc. A plain
           # chore/* branch is rejected at creation, so the sync PR rides the
           # ID-1237 feature namespace.
-          branch: feature/ID-1237-sync-template-${{ steps.cfg.outputs.version }}
+          branch: feature/ID-1237-sync-template-${{ steps.cfg.outputs.version_slug }}
           delete-branch: true
           commit-message: "chore(template): sync sync-safe paths to ${{ steps.cfg.outputs.version }} [ID-1237]"
           title: "chore(template): sync to ${{ steps.cfg.outputs.version }} [ID-1237]"

@@ -64,21 +64,33 @@ changes when you deliberately bump the ref.
 
 ## Required token
 
-`claude-sanbox` is **private**, so the caller's default `GITHUB_TOKEN` cannot
-read its tarball. Provide a **read-only** token on `claude-sanbox` — a
-fine-grained PAT or GitHub App token scoped to **only `claude-sanbox`** with
-**Contents: Read** (nothing else) — exposed as the secret `TEMPLATE_TOKEN`
-(uppercase, no hyphen — GitHub secret names allow only `[A-Za-z0-9_]`; matches
-the `<CAPABILITY>_TOKEN` convention of ADR 0004). It is forwarded via
-`secrets: inherit` and used **only** to download the template tarball.
+The caller's default `GITHUB_TOKEN` is **not** enough, for two reasons:
 
-The sync **PR is opened with the caller's auto-minted `GITHUB_TOKEN`**, not
-`TEMPLATE_TOKEN`, so `TEMPLATE_TOKEN` needs no write access anywhere. For this
-to work the caller repo (or org) must have **Settings → Actions → General →
-"Allow GitHub Actions to create and approve pull requests"** enabled.
+1. `claude-sanbox` is **private**, and a repo's `GITHUB_TOKEN` cannot read
+   another private repo's tarball.
+2. The enterprise **disables** "Allow GitHub Actions to create and approve pull
+   requests" (it is forced off org-wide and cannot be toggled per-repo). A PR
+   opened with `GITHUB_TOKEN` is therefore rejected. A PAT bypasses this — the
+   same reason `RELEASE_PLEASE_TOKEN` and `LABEL_SYNC_TOKEN` exist.
 
-If `claude-sanbox` is later made public, the workflow falls back to the caller's
-`GITHUB_TOKEN` for the tarball too and no extra secret is needed.
+So `TEMPLATE_TOKEN` must be a **PAT (or GitHub App token)** that does *both* the
+tarball read and the PR creation. Least-privilege scope:
+
+| Repo | Permission |
+| --- | --- |
+| `claude-sanbox` (template) | Contents: **Read** |
+| each consumer repo (`fichajes-app`, …) | Contents: **Read & write**, Pull requests: **Read & write** |
+
+Expose it as the org secret `TEMPLATE_TOKEN` (uppercase, no hyphen — GitHub
+secret names allow only `[A-Za-z0-9_]`; matches the `<CAPABILITY>_TOKEN`
+convention of ADR 0004) and make it **visible to the consumer repos** (not to
+`claude-sanbox`, which never runs the sync). It is forwarded via
+`secrets: inherit`.
+
+> Strict-minimum alternative: two tokens — one read-only on `claude-sanbox` for
+> the tarball, one write-only on consumer repos for the PR — at the cost of a
+> second secret and a workflow input. The single-PAT setup above mirrors the
+> existing org-PAT pattern and is the recommended default.
 
 ## What a run produces
 
