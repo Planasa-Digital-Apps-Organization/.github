@@ -24,8 +24,17 @@ sync-paths:
   - .claude/rules
   - .claude/agents
   - .claude/hooks
+  - .claude/settings.json
   - AGENTS.md
 ```
+
+`.claude/settings.json` carries the **enforced baseline** — the `permissions.deny`
+guardrails (force-push, `reset --hard`, `gh api DELETE`, …) and the hook
+registration that pairs with the synced `.claude/hooks/`. It is template-owned and
+synced so derived repos inherit the safety net (see ADR 0004 in `claude-sanbox`).
+Put **per-repo / per-user overrides in `.claude/settings.local.json`** (gitignored;
+Claude Code merges it over `settings.json`) — do **not** hand-edit `settings.json`,
+the sync overwrites it.
 
 ### 2. `.github/workflows/sync-claude-template.yml`
 
