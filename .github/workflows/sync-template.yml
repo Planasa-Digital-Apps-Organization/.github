@@ -9,11 +9,13 @@ on:
     secrets:
       TEMPLATE_TOKEN:
         description: >-
-          Token with read access to the template repo (claude-sanbox). Required
-          because claude-sanbox is private: the caller's default GITHUB_TOKEN
-          cannot read another private repo's tarball. Pass an org PAT/app token
-          via `secrets: inherit` or an explicit `secrets:` map. Falls back to
-          the caller's GITHUB_TOKEN if the template repo is ever made public.
+          READ-ONLY token on the template repo (claude-sanbox), used ONLY to
+          download its tarball. Required because claude-sanbox is private: the
+          caller's default GITHUB_TOKEN cannot read another private repo. This
+          token is least-privilege (Contents: Read on claude-sanbox only) and is
+          NOT used to open the sync PR — that uses the caller's GITHUB_TOKEN.
+          Pass via `secrets: inherit` or an explicit `secrets:` map. Falls back
+          to the caller's GITHUB_TOKEN if the template repo is ever made public.
         required: false
 
 permissions:
@@ -83,8 +85,18 @@ jobs:
         # subsumes the `git diff --quiet` gate described in the handoff.
         uses: peter-evans/create-pull-request@v6
         with:
-          token: ${{ secrets.TEMPLATE_TOKEN || github.token }}
-          branch: chore/sync-template-${{ steps.cfg.outputs.version }}
+          # The PR is opened in the CALLER repo, so it must use the caller's
+          # auto-minted GITHUB_TOKEN (scoped by this workflow's `permissions:`
+          # block above) — NOT TEMPLATE_TOKEN, which is a least-privilege
+          # read-only token on the private template repo and cannot write here.
+          # Requires the caller repo/org setting "Allow GitHub Actions to create
+          # and approve pull requests" to be enabled.
+          token: ${{ github.token }}
+          # Branch name must satisfy the enterprise naming ruleset, which only
+          # allows feature/<JIRA>-<NNN>-*, hotfix/*, release/*, etc. A plain
+          # chore/* branch is rejected at creation, so the sync PR rides the
+          # ID-1237 feature namespace.
+          branch: feature/ID-1237-sync-template-${{ steps.cfg.outputs.version }}
           delete-branch: true
           commit-message: "chore(template): sync sync-safe paths to ${{ steps.cfg.outputs.version }} [ID-1237]"
           title: "chore(template): sync to ${{ steps.cfg.outputs.version }} [ID-1237]"

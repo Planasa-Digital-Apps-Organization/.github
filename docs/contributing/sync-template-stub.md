@@ -65,15 +65,27 @@ changes when you deliberately bump the ref.
 ## Required token
 
 `claude-sanbox` is **private**, so the caller's default `GITHUB_TOKEN` cannot
-read its tarball. Provide a token with read access to `claude-sanbox` — an org
-PAT or GitHub App token exposed as a repository secret named `TEMPLATE_TOKEN`
+read its tarball. Provide a **read-only** token on `claude-sanbox` — a
+fine-grained PAT or GitHub App token scoped to **only `claude-sanbox`** with
+**Contents: Read** (nothing else) — exposed as the secret `TEMPLATE_TOKEN`
 (uppercase, no hyphen — GitHub secret names allow only `[A-Za-z0-9_]`; matches
-the `<CAPABILITY>_TOKEN` convention of ADR 0004). It is forwarded to the reusable
-workflow via `secrets: inherit`. If `claude-sanbox` is later made public, the
-workflow falls back to the caller's `GITHUB_TOKEN` and no extra secret is needed.
+the `<CAPABILITY>_TOKEN` convention of ADR 0004). It is forwarded via
+`secrets: inherit` and used **only** to download the template tarball.
+
+The sync **PR is opened with the caller's auto-minted `GITHUB_TOKEN`**, not
+`TEMPLATE_TOKEN`, so `TEMPLATE_TOKEN` needs no write access anywhere. For this
+to work the caller repo (or org) must have **Settings → Actions → General →
+"Allow GitHub Actions to create and approve pull requests"** enabled.
+
+If `claude-sanbox` is later made public, the workflow falls back to the caller's
+`GITHUB_TOKEN` for the tarball too and no extra secret is needed.
 
 ## What a run produces
 
-A run opens a `chore/sync-template-<version>` PR labelled `area:ai-behavior` and
-`automation`. Review before merging — `.claude/**` and `AGENTS.md` are
+A run opens a `feature/ID-1237-sync-template-<version>` PR labelled
+`area:ai-behavior` and `automation`. (The branch sits in the `feature/<JIRA>`
+namespace because the enterprise naming ruleset rejects `chore/*` branches at
+creation; if `chore/**` is later excluded from that ruleset, this can revert to
+a `chore/sync-template-<version>` name.) Review before merging — `.claude/**`
+and `AGENTS.md` are
 CODEOWNERS-gated. If nothing changed, no PR is opened.
