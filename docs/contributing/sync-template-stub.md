@@ -24,8 +24,17 @@ sync-paths:
   - .claude/rules
   - .claude/agents
   - .claude/hooks
+  - .claude/settings.json
   - AGENTS.md
 ```
+
+`.claude/settings.json` carries the **enforced baseline** — the `permissions.deny`
+guardrails (force-push, `reset --hard`, `gh api DELETE`, …) and the hook
+registration that pairs with the synced `.claude/hooks/`. It is template-owned and
+synced so derived repos inherit the safety net (see ADR 0004 in `claude-sanbox`).
+Put **per-repo / per-user overrides in `.claude/settings.local.json`** (gitignored;
+Claude Code merges it over `settings.json`) — do **not** hand-edit `settings.json`,
+the sync overwrites it.
 
 ### 2. `.github/workflows/sync-claude-template.yml`
 
@@ -64,16 +73,40 @@ changes when you deliberately bump the ref.
 
 ## Required token
 
-`claude-sanbox` is **private**, so the caller's default `GITHUB_TOKEN` cannot
-read its tarball. Provide a token with read access to `claude-sanbox` — an org
-PAT or GitHub App token exposed as a repository secret named `TEMPLATE_TOKEN`
-(uppercase, no hyphen — GitHub secret names allow only `[A-Za-z0-9_]`; matches
-the `<CAPABILITY>_TOKEN` convention of ADR 0004). It is forwarded to the reusable
-workflow via `secrets: inherit`. If `claude-sanbox` is later made public, the
-workflow falls back to the caller's `GITHUB_TOKEN` and no extra secret is needed.
+The caller's default `GITHUB_TOKEN` is **not** enough, for two reasons:
+
+1. `claude-sanbox` is **private**, and a repo's `GITHUB_TOKEN` cannot read
+   another private repo's tarball.
+2. The enterprise **disables** "Allow GitHub Actions to create and approve pull
+   requests" (it is forced off org-wide and cannot be toggled per-repo). A PR
+   opened with `GITHUB_TOKEN` is therefore rejected. A PAT bypasses this — the
+   same reason `RELEASE_PLEASE_TOKEN` and `LABEL_SYNC_TOKEN` exist.
+
+So `TEMPLATE_TOKEN` must be a **PAT (or GitHub App token)** that does *both* the
+tarball read and the PR creation. Least-privilege scope:
+
+| Repo | Permission |
+| --- | --- |
+| `claude-sanbox` (template) | Contents: **Read** |
+| each consumer repo (`fichajes-app`, …) | Contents: **Read & write**, Pull requests: **Read & write** |
+
+Expose it as the org secret `TEMPLATE_TOKEN` (uppercase, no hyphen — GitHub
+secret names allow only `[A-Za-z0-9_]`; matches the `<CAPABILITY>_TOKEN`
+convention of ADR 0004) and make it **visible to the consumer repos** (not to
+`claude-sanbox`, which never runs the sync). It is forwarded via
+`secrets: inherit`.
+
+> Strict-minimum alternative: two tokens — one read-only on `claude-sanbox` for
+> the tarball, one write-only on consumer repos for the PR — at the cost of a
+> second secret and a workflow input. The single-PAT setup above mirrors the
+> existing org-PAT pattern and is the recommended default.
 
 ## What a run produces
 
-A run opens a `chore/sync-template-<version>` PR labelled `area:ai-behavior` and
-`automation`. Review before merging — `.claude/**` and `AGENTS.md` are
+A run opens a `feature/ID-1237-sync-template-<version>` PR labelled
+`area:ai-behavior` and `automation`. (The branch sits in the `feature/<JIRA>`
+namespace because the enterprise naming ruleset rejects `chore/*` branches at
+creation; if `chore/**` is later excluded from that ruleset, this can revert to
+a `chore/sync-template-<version>` name.) Review before merging — `.claude/**`
+and `AGENTS.md` are
 CODEOWNERS-gated. If nothing changed, no PR is opened.

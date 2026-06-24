@@ -26,7 +26,7 @@ El flujo estándar para **todos** los repos (incluido este `.github`):
 4. Merge sólo con la branch protection / ruleset satisfecha.
 
 Detalle del branching en el
-[runbook git-flow](https://github.com/Planasa-Digital-Apps-Organization/claude-sanbox/blob/master/docs/runbooks/git-flow.md).
+[runbook git-flow](https://github.com/Planasa-Digital-Apps-Organization/.github/blob/master/docs/runbooks/git-flow.md).
 
 ## Decisiones de arquitectura (ADR)
 
