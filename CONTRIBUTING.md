@@ -20,9 +20,9 @@ ejemplos buenos y errores comunes.
 
 | Tema | ✅ Do | ❌ Don't | Detalle |
 | --- | --- | --- | --- |
-| Ramas | `feature/BCR-1234-add-customer-export` | `feature/customer-export`, `bcr1234`, `marcos/wip`, `dev` | [git-flow runbook](https://github.com/Planasa-Digital-Apps-Organization/claude-sanbox/blob/master/docs/runbooks/git-flow.md) |
+| Ramas | `feature/BCR-1234-add-customer-export` | `feature/customer-export`, `bcr1234`, `marcos/wip`, `dev` | [git-flow runbook](https://github.com/Planasa-Digital-Apps-Organization/.github/blob/master/docs/runbooks/git-flow.md) |
 | Commits | `feat(api): add customer export endpoint [BCR-1234]` | `Update files`, `WIP`, `feat: export` (sin JIRA) | [commit-style rule](https://github.com/Planasa-Digital-Apps-Organization/claude-sanbox/blob/master/.claude/rules/commit-style.md) |
-| PRs | Título igual al subject del commit, base `develop`, `## Test plan` rellenado | PR a `master` directo, sin `## Test plan`, título genérico tipo "Update README" | [git-flow runbook](https://github.com/Planasa-Digital-Apps-Organization/claude-sanbox/blob/master/docs/runbooks/git-flow.md) |
+| PRs | Título igual al subject del commit, base `develop`, `## Test plan` rellenado | PR a `master` directo, sin `## Test plan`, título genérico tipo "Update README" | [git-flow runbook](https://github.com/Planasa-Digital-Apps-Organization/.github/blob/master/docs/runbooks/git-flow.md) |
 | Reviews | Esperar approval de CODEOWNERS + 1 maintainer; responder comments antes de remerge | Auto-merge sin review, "trust me", ignorar comments sin réplica | [GOVERNANCE.md](.github/GOVERNANCE.md) |
 
 Prefijos JIRA permitidos: `BCR`, `BTS`, `ID`, `MAM`, `GIT`.

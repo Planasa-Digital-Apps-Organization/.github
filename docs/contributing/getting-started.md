@@ -5,7 +5,7 @@ merge.
 
 > Esta guía es la versión **accionable**. Para la doctrina detallada (qué
 > es Conventional Commits, por qué master-based, qué hace cada ruleset)
-> ver el [git-flow runbook](https://github.com/Planasa-Digital-Apps-Organization/claude-sanbox/blob/master/docs/runbooks/git-flow.md)
+> ver el [git-flow runbook](https://github.com/Planasa-Digital-Apps-Organization/.github/blob/master/docs/runbooks/git-flow.md)
 > y la [commit-style rule](https://github.com/Planasa-Digital-Apps-Organization/claude-sanbox/blob/master/.claude/rules/commit-style.md).
 
 ---
