@@ -16,10 +16,16 @@ a Claude en lenguaje natural** — la skill rechaza lo que no encaje.
 - **Plan B (release parcial):** construye `release/x.y.z` desde `master`,
   mergea sólo las `feature/*` confirmadas, PR `release/x.y.z → master`.
   Resetea `develop` a `master` después.
+- **Método de merge (config real del repo):** PRs **a `develop` → squash**;
+  PRs **a `master`** (release/hotfix) **→ merge commit**. El ruleset rechaza el
+  método contrario, así que `gh pr merge` debe usar `--squash` hacia develop y
+  `--merge` hacia master.
+- **Borrado de ramas:** las short-lived se borran solas al mergear su PR
+  (*Automatically delete head branches*). Ver [Limpieza de ramas](#limpieza-de-ramas).
 - **Skills activas:** `commit-flow` (siempre) + `commit-flow-flutter`
   (auto-activa si hay `pubspec.yaml`).
-- **Herramientas que usa el modelo:** sólo `git merge --no-ff` y `git pull`.
-  No rebase, no cherry-pick, no squash por defecto.
+- **Operaciones locales:** `git merge` y `git pull`. No rebase ni cherry-pick
+  por defecto (overrides explícitos, ver más abajo).
 
 ## Prefijos JIRA permitidos
 
@@ -110,6 +116,11 @@ Plan B"*.
 3. Tras merge, recordarte que hagas **forward-merge `master` → `develop`**
    para que QA en `develop` refleje producción.
 
+> ⚠️ El forward-merge es **`master → develop`**, nunca `hotfix/* → develop`.
+> Con *Automatically delete head branches* activo, la `hotfix/*` se borra en el
+> instante en que su PR a `master` mergea, así que ya no existe cuando toca
+> propagar — y es inofensivo: el fix vive en `master` como commit inmutable + tag.
+
 ## Safeguards — lo que las skills rechazan
 
 - Branchear desde `develop`, desde otra `feature/*` (excepto stacked
@@ -120,6 +131,26 @@ Plan B"*.
 - Renombrar silenciosamente una rama no conforme.
 - Rebasear o cherry-pickear silenciosamente.
 - Editar código para que `dart format` / `flutter analyze` pase sin tu OK.
+
+## Limpieza de ramas
+
+Las short-lived (`feature/*`, `hotfix/*`, `release/*`) son **desechables**: en
+cuanto su PR mergea no aportan nada y se borran.
+
+- **Borrado automático:** el repo activa *Automatically delete head branches*
+  (Settings → General → Pull Requests). GitHub borra la head branch al mergear su
+  PR; no hay que borrar a mano ni montar un cron de limpieza.
+- **`master`/`develop` nunca se borran:** son long-lived, nunca son head branch de
+  un PR, y el ruleset (*Restrict deletions*) las protege.
+- **Borrar ≠ perder historia:** las releases se reconstruyen desde los **tags
+  `vX.Y.Z` inmutables** + la historia de `master`, nunca desde la rama. Bajo squash
+  (PRs a develop), los commits originales siguen recuperables vía
+  `refs/pull/<n>/head` (GitHub los retiene permanentemente) o el botón
+  *Restore branch* del PR cerrado. El miedo a "perder el historial para reconstruir
+  releases" es infundado: el ancla de una release es su tag, no su rama.
+- **Ramas abandonadas (PR cerrado sin merge):** el borrado automático **no** las
+  toca. Si se acumulan, una barrida periódica acotada a `feature/*` (exenta de
+  `develop`/`master`, ignorando PRs abiertos) las limpia.
 
 ## Drift warnings que las skills emiten
 

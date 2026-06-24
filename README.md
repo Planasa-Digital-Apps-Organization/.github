@@ -105,7 +105,7 @@ jobs:
 ### 6. Primer commit y push
 
 Convención de arranque (ver ADR 0003 y
-[`docs/runbooks/git-flow.md`](https://github.com/Planasa-Digital-Apps-Organization/claude-sanbox/blob/master/docs/runbooks/git-flow.md)):
+[`docs/runbooks/git-flow.md`](https://github.com/Planasa-Digital-Apps-Organization/.github/blob/master/docs/runbooks/git-flow.md)):
 
 ```bash
 git checkout -b feature/<JIRA>-<NNN>-bootstrap-template
